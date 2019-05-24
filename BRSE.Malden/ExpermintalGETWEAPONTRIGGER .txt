@@ -1,0 +1,35 @@
+
+EXPERIMENTAL ONLY FOR TESTING!!!
+
+0=[]spawn {while {true} do { 
+sleep 5;
+{
+_grp = group _x;   
+_cargoAr =  nearestObjects [position _x, ["BOX_NATO_AmmoOrd_F"], 1500];
+if(count _cargoAr != 0) then{
+	_cargo = _cargoAr select 0; 
+	if (((currentWeapon _x)=="") && (isTouchingGround _x)) then {
+	 if(((count (waypoints _grp)) == 1) && !((isNull _cargo) isEqualTo objNull) && (_x != player))  then { 
+		_wp = _grp addWaypoint [getPosWorld _cargo, 0];
+		_wp setWaypointType "MOVE"; 
+		_wp setWaypointStatements ["true", "[this] execVM 'WeaponTake.sqf';"];};}; 
+	}; }forEach allUnits;
+};};
+
+
+
+call{[]spawn {while {true} do {  
+sleep 5; 
+{ 
+_grp = group _x;    
+_cargoAr =  nearestObjects [position _x, ["BOX_NATO_AmmoOrd_F"], 1500];   
+if(count _cargoAr != 0) then{ 
+ _cargo = _cargoAr select 0;   
+ if(((currentWeapon _x)=="") && !((isNull _cargo) isEqualTo objNull) && (isTouchingGround _x) && (_x != player)) then {  
+  while {(count (waypoints _grp)) > 1} do{ deleteWaypoint ((waypoints _grp) select 0);}; 
+  _wp = _grp addWaypoint [position _cargo, 0];   
+  _wp setWaypointType "MOVE";  
+  _wp setWaypointStatements ["true", "[this] execVM 'WeaponTake.sqf'"];};  
+ }; }forEach allUnits; 
+}} 
+}
