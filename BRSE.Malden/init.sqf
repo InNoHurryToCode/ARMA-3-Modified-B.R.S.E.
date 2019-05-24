@@ -15,7 +15,6 @@ LoadingPleaseWait = "Spawning loot boxes and cars. Please wait.";
 BRSEWeather = 0;
 probaray = [50,50,50,20,0];
 combatBehav = "COMBAT";
-MainHeroesArray = ["C_man_1","C_man_polo_1_F_afro","C_man_polo_1_F_euro","C_man_polo_1_F_asia","C_man_1","C_man_polo_3_F_afro","C_man_polo_4_F_euro","C_man_polo_4_F_asia","C_man_polo_6_F","C_man_polo_6_F_afro","C_man_polo_6_F_euro","C_man_polo_6_F_asia","C_scientist_F","C_man_hunter_1_F","C_journalist_F","C_Orestes","C_Driver_2_F","C_Marshal_F","C_man_sport_1_F_euro","C_man_sport_1_F_afro","C_man_sport_1_F_asia","C_man_sport_2_F_euro","C_man_sport_2_F_afro","C_man_sport_2_F_asia","C_man_sport_3_F_euro","C_man_sport_3_F_afro","C_man_sport_3_F_asia","O_G_Survivor_F","B_Survivor_F","I_G_Survivor_F"];
 BRSETime =0;
 isFatigueEnabled = 1;
 EnableCustomHudMode = 1;
@@ -31,6 +30,110 @@ IsTimeVariable = false;
 KillsCounter = 0;
 RememberSettings=0;
 
+// Item spawn
+userDLCConfigListForSpawn = [];
+userRiflesListForSpawn = [];
+userPistolsListForSpawn = [];
+userBackPacksListForSpawn = [];
+userVestsListForSpawn = []; 
+userVestsListForSpawn_Camo = [];
+userVestsListForSpawn_NoCamo = [];
+userUniformsListForSpawn = [];
+userHelmetsListForSpawn = [];
+userHelmetsListForSpawn_Helmet1b = [];
+userHelmetsListForSpawn_HelmetBase = [];
+
+initUsersDLCList = {
+_dlcArr = getDLCs 1;
+{
+switch(_x) do {
+case 275700: {_x = "Curator";}; // correct
+case 288520: {_x = "Kart";}; // correct
+case 332350: {_x = "Mark";}; // correct
+case 395180: {_x = "Expansion";}; //correct
+case 571710: {_x = "ORANGE";}; // correct
+default {_x = ""};
+};
+if (!(_x isEqualTo ""))then {
+ userDLCConfigListForSpawn pushBack (_x);	
+};
+}forEach _dlcArr;	
+};
+
+initSpawnList = {
+_wordToSearch = _this select 0;
+_userListForSpawn = [];
+_dlcItems = []; 
+_configText= "";
+//default string to get all the default weapons within config file
+_configText = format ["((configName (_x)) isKindof ['%1', configFile >> 'cfgWeapons']) && ((getText (_x >> 'DLC') isEqualTo '') || !((getText (_x >> 'author') isEqualTo 'Bohemia Interactive') || (getText (_x >> 'author') isEqualTo 'Bravo Zero One Studios'))) && (getText (_x >> 'displayName') != '' && getnumber (_x >> 'scope') isEqualTo 2)", _wordToSearch]; 
+_userListForSpawn = _configText configClasses (configFile >> "cfgWeapons");
+
+if (count userDLCConfigListForSpawn > 0) then {
+	{	
+	 _configText = format ["((configName (_x)) isKindof ['%1', configFile >> 'cfgWeapons']) && (getText (_x >> 'DLC') isEqualTo '%2') && (getText (_x >> 'displayName') != '' && getnumber (_x >> 'scope') isEqualTo 2)",_wordToSearch ,_x];
+	 _dlcItems = _configText configClasses (configFile >> "cfgWeapons");
+	 if( count _dlcItems > 0) then {
+	 _userListForSpawn = _userListForSpawn + _dlcItems;
+	 };
+	}forEach userDLCConfigListForSpawn;
+};
+_userListForSpawn;
+};
+
+initBackPacks = {
+_defaultBackpacksForSpawn = [];
+_dlcBackpacks = []; 
+_configText= "";
+findRes = false;
+staticWeaponFilter ="";
+staticWeaponFilter = "((getText (_x >> '_generalMacro')) find 'Mortar' < 0) && ((getText (_x >> '_generalMacro')) find 'Parachute' < 0) && ((getText (_x >> '_generalMacro')) find 'HMG' < 0)";
+//default string to get all the default weapons within config file
+_defaultBackpacksForSpawn = (format ["%1 && !((configName (_x)) isKindof ['Weapon_Bag_Base', configFile >> 'cfgVehicles']) && ((configName (_x)) isKindof ['Bag_Base', configFile >> 'cfgVehicles']) && ((getText (_x >> 'DLC') isEqualTo '') || !((getText (_x >> 'author') isEqualTo 'Bohemia Interactive') || (getText (_x >> 'author') isEqualTo 'Bravo Zero One Studios'))) && getText (_x >> 'displayName') != '' && getnumber (_x >> 'scope') isEqualTo 2", staticWeaponFilter]) configClasses (configFile >> "cfgVehicles");
+
+if (count userDLCConfigListForSpawn > 0) then {
+	{	
+	 _configText = format ["%1 && !((configName (_x)) isKindof ['Weapon_Bag_Base', configFile >> 'cfgVehicles']) && ((configName (_x)) isKindof ['Bag_Base', configFile >> 'cfgVehicles']) && (getText (_x >> 'DLC') isEqualTo '%2') && getText (_x >> 'displayName') != '' && getnumber (_x >> 'scope') isEqualTo 2",staticWeaponFilter, _x];
+	 _dlcBackpacks = _configText configClasses (configFile >> "cfgVehicles");
+	 if( count _dlcBackpacks > 0) then {
+	 _defaultBackpacksForSpawn = _defaultBackpacksForSpawn + _dlcBackpacks;
+	 };
+	}forEach userDLCConfigListForSpawn;
+};
+_defaultBackpacksForSpawn;
+};
+
+initHeroes = {
+_defaultHeroes = [];
+_dlcHeroes = []; 
+staticFilter = "((getText (_x >> '_generalMacro')) find 'Virtual' < 0) && ((getText (_x >> '_generalMacro')) find 'Client' < 0)";
+_configText = format ["%1 && !((configName (_x)) isKindof ['Animal', configFile >> 'cfgVehicles']) && ((configName (_x)) isKindof ['Man', configFile >> 'cfgVehicles']) && ((getText (_x >> 'DLC') isEqualTo '') || !((getText (_x >> 'author') isEqualTo 'Bohemia Interactive') || (getText (_x >> 'author') isEqualTo 'Bravo Zero One Studios'))) && (getText (_x >> 'displayName') != '' && getnumber (_x >> 'scope') isEqualTo 2)", staticFilter];
+_defaultHeroes = _configText configClasses (configFile >> "cfgVehicles");
+if (count userDLCConfigListForSpawn > 0) then {
+	{	
+	 _configText = format ["%1 && !((configName (_x)) isKindof ['Animal', configFile >> 'cfgVehicles']) && ((configName (_x)) isKindof ['Man', configFile >> 'cfgVehicles']) && (getText (_x >> 'DLC') isEqualTo '%2') && (getText (_x >> 'displayName') != '' && getnumber (_x >> 'scope') isEqualTo 2)", staticFilter, _x];
+	 _dlcHeroes = _configText configClasses (configFile >> "cfgVehicles");
+	 if( count _dlcBackpacks > 0) then {
+	 _defaultHeroes = _defaultHeroes + _dlcHeroes;
+	 };
+	}forEach userDLCConfigListForSpawn;
+};
+_defaultHeroes;
+};
+MainHeroesArray = call initHeroes;
+
+//Generate lists that will be used for item spawn
+call initUsersDLCList;
+userRiflesListForSpawn = ['Rifle'] call initSpawnList;
+userPistolsListForSpawn = ['Pistol'] call initSpawnList;
+userBackPacksListForSpawn = call initBackPacks;
+userVestsListForSpawn_Camo = ['Vest_Camo_Base'] call initSpawnList;
+userVestsListForSpawn_NoCamo = ['Vest_NoCamo_Base'] call initSpawnList;
+userVestListForSpawn = userVestsListForSpawn_Camo + userVestsListForSpawn_NoCamo;
+userUniformsListForSpawn = ['Uniform_Base'] call initSpawnList;
+userHelmetsListForSpawn_Helmet1b = ['H_HelmetB'] call initSpawnList;
+userHelmetsListForSpawn_HelmetBase = ['HelmetBase'] call initSpawnList;
+userHelmetsListForSpawn = userHelmetsListForSpawn_Helmet1b + userHelmetsListForSpawn_HelmetBase;
 
 switch(randompos) do{
 	case 0: {LSgr =1};
