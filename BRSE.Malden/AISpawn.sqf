@@ -243,4 +243,3 @@ switch (BRSETime) do {
 	case 5: {IsTimeVariable = true;};
     default { hint "ERROR - WRONG BRSEAICount !" };
 };
-
