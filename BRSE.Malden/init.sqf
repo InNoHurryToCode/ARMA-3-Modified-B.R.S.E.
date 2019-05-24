@@ -261,8 +261,8 @@ deleteVehicle _obj;
 };
 };
 
-myfuncLS = compile preprocessFileLineNumbers "lootspawn.sqf";
-myfuncCS = compile preprocessFileLineNumbers "carspawn.sqf";
+myfuncLS = compile preprocessFileLineNumbers "SpawnLoot.sqf";
+myfuncCS = compile preprocessFileLineNumbers "SpawnCars.sqf";
 
 LootSpawnRandomizer = {
 _LStrigger = _this select 0;
@@ -332,7 +332,7 @@ while {(count (waypoints _grp)) > 0} do{ deleteWaypoint ((waypoints _grp) select
 _wp = _grp addWaypoint [DropPointPos, 0];  
 _grp setBehaviour "CARELESS";           
 _wp setWaypointType "MOVE"; 
-_wp setWaypointStatements["true","0 = [] execVM 'planeDrop.sqf';"]; 
+_wp setWaypointStatements["true","0 = [] execVM 'PlaneDropLoot.sqf';"]; 
  
 _wp = _grp addWaypoint [LeavePos,0]; 
 _wp setWaypointType "MOVE"; 
@@ -745,4 +745,3 @@ deleteMarker "DropLootMarker";
 roundCounter = roundCounter +1;
 	};
 };
-
