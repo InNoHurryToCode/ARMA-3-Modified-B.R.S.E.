@@ -1,79 +1,32 @@
 _buildingPosition = _This select 0;
-_weaponR = floor random(38);
 _myweapon = "BOX_NATO_AmmoOrd_F";
 _ammobox = createVehicle ["BOX_NATO_AmmoOrd_F", _buildingPosition, [], 0, "NONE"];
 _mybackpack = "1";
 _myitem = "1";
 _mypistol = "1";
+_weaponsSize = 0;
+_weaponR = 0;
 clearweaponcargo _ammobox;
 clearmagazinecargo _ammobox;
 clearItemCargo _ammobox;
 clearBackpackCargo _ammobox;
-switch(_weaponR) do {
-case 0: {_myweapon = "arifle_MX_SW_Black_F";};
-case 1: {_myweapon = "arifle_SDAR_F";};
-case 2: {_myweapon = "arifle_Katiba_C_ACO_pointer_F";};
-case 3: {_myweapon = "arifle_Mk20C_ACO_pointer_F";};
-case 4: {_myweapon = "arifle_MX_pointer_F";};
-case 5: {_myweapon = "arifle_TRG21_ACO_pointer_F";};
-case 6: {_myweapon = "arifle_TRG20_Holo_F";};
-case 7: {_myweapon = "arifle_MX_GL_Hamr_pointer_F";};
-case 8: {_myweapon = "arifle_MX_SW_F";};
-case 9: {_myweapon = "arifle_MXC_F";};
-case 10: {_myweapon = "arifle_MX_GL_F";};
-case 11: {_myweapon = "arifle_MX_Holo_pointer_F";};
-case 12: {_myweapon = "arifle_MXC_Holo_pointer_snds_F";};
-case 13: {_myweapon = "arifle_Mk20_GL_plain_F";};
-case 14: {_myweapon = "arifle_Katiba_GL_ACO_pointer_snds_F";};
-case 15: {_myweapon = "arifle_TRG20_ACO_Flash_F";};
-case 16: {_myweapon = "arifle_TRG21_GL_MRCO_F";};
-case 17: {_myweapon = "arifle_MXM_Hamr_pointer_F";};
-case 18: {_myweapon = "arifle_MXM_F";};
-case 19: {_myweapon = "arifle_Katiba_ARCO_pointer_F";};
-case 20: {_myweapon = "arifle_Katiba_ARCO_F";};
-case 21: {_myweapon = "arifle_Mk20_plain_F";};
-case 22: {_myweapon = "arifle_Mk20C_F";};
-case 23: {_myweapon = "arifle_Katiba_GL_F";};
-case 24: {_myweapon = "hgun_PDW2000_F";};
-case 25: {_myweapon = "hgun_PDW2000_snds_F";};
-case 26: {_myweapon = "hgun_PDW2000_Holo_snds_F";};
-case 27: {_myweapon = "SMG_02_F";};
-case 28: {_myweapon = "SMG_02_ARCO_pointg_F";};
-case 29: {_myweapon = "SMG_01_Holo_F";};
-case 30: {_myweapon = "SMG_01_Holo_pointer_snds_F";};
-case 31: {_myweapon = "srifle_GM6_LRPS_F";};
-case 32: {_myweapon = "srifle_EBR_DMS_pointer_snds_F";};
-case 33: {_myweapon = "srifle_DMR_01_SOS_F";};  
-case 34: {_myweapon = "srifle_LRR_LRPS_F";};
-case 35: {_myweapon = "arifle_MX_GL_Black_Hamr_pointer_F";}; 
-case 36: {_myweapon = "LMG_Mk200_MRCO_F";};
-case 37: {_myweapon = "LMG_Zafir_pointer_F";};
-default {};
-};
-if(_weaponR < 38) then {
+
+/* rifle block */
+_weaponsSize = count userRiflesListForSpawn;
+_weaponR = floor random(_weaponsSize);
+_myweapon = configName (userRiflesListForSpawn select _weaponR);
 _ammobox addWeaponCargo [_myweapon, 1];
 _magazinearray = getArray (configFile >> 'CfgWeapons'>> _myweapon >> 'magazines');
 _mymagazine = _magazinearray select 0;
-_randmagazine = floor (random (4));
+_randmagazine = floor (random [1,2,4]);
 if (_randmagazine > 0) then {
 _ammobox addMagazineCargo [_mymagazine, _randmagazine];
 };
-};
 
-_pistolR = floor random(9);
-switch(_pistolR) do {
-case 0: {_mypistol = "hgun_ACPC2_F";};
-case 1: {_mypistol = "hgun_P07_F";};
-case 2: {_mypistol = "hgun_Pistol_heavy_01_F";};
-case 3: {_mypistol = "hgun_Rook40_F";};
-case 4: {_mypistol = "hgun_ACPC2_snds_F";};
-case 5: {_mypistol = "hgun_P07_snds_F";};
-case 6: {_mypistol = "hgun_Pistol_heavy_01_MRD_F";};
-case 7: {_mypistol = "hgun_Pistol_heavy_01_snds_F";};
-case 8: {_mypistol = "hgun_Rook40_snds_F";};
-default {};
-};
-if(_pistolR < 9) then {
+/* pistol block */
+_pistoltSize = count userPistolsListForSpawn;
+_pistolR = floor random(_pistoltSize);
+_mypistol = configName (userPistolsListForSpawn select _pistolR);
 _ammobox addWeaponCargo [_mypistol, 1];
 _magazinearray = getArray (configFile >> 'CfgWeapons'>> _mypistol >> 'magazines');
 _mymagazine = _magazinearray select 0;
@@ -81,143 +34,30 @@ _randmagazine = floor (random [1,2,8]);
 if (_randmagazine > 0) then {
 _ammobox addMagazineCargo [_mymagazine, _randmagazine];
 };
-};
-
-_backpackR = floor (random 9);
-switch(_backpackR) do {
-case 0: {_mybackpack = "B_AssaultPack_blk";};
-case 1: {_mybackpack = "B_AssaultPack_khk";};
-case 2: {_mybackpack = "B_Carryall_cbr";};
-case 3: {_mybackpack = "B_FieldPack_blk";};
-case 4: {_mybackpack = "B_Kitbag_mcamo";};
-case 5: {_mybackpack = "B_TacticalPack_ocamo";};
-case 6: {_mybackpack = "B_AssaultPack_Kerry";};
-case 7: {_mybackpack = "B_LegStrapBag_black_F";};
-case 8: {_mybackpack = "B_Messenger_gray_F";};
-default {};
-};
-if (_backpackR < 9) then {
+/* backpack */
+_backpackSize = count userBackPacksListForSpawn;
+_backpackR = floor random(_backpackSize);
+_mybackpack = configName (userBackPacksListForSpawn select _backpackR);
 _ammobox addBackPackCargo [_mybackpack,1];
-};
 
-_itemR = floor (random 27);
-switch(_itemR) do {
-case 0: {_myitem = "V_PlateCarrier1_blk";};
-case 1: {_myitem = "V_PlateCarrier2_rgr";};
-case 2: {_myitem = "V_Chestrig_blk";};
-case 3: {_myitem = "V_Press_F";};
-case 4: {_myitem = "V_TacVest_blk";};
-case 5: {_myitem = "V_PlateCarrier1_rgr";};
-case 6: {_myitem = "V_HarnessO_brn";};
-case 7: {_myitem = "V_Rangemaster_belt";};
-case 8: {_myitem = "V_BandollierB_khk";};
-case 9: {_myitem = "V_BandollierB_blk";};
-case 10: {_myitem = "V_BandollierB_oli";};
-case 11: {_myitem = "V_PlateCarrier3_rgr";};
-case 12: {_myitem = "V_PlateCarrierSpec_rgr";};
-case 13: {_myitem = "V_Chestrig_rgr";};
-case 14: {_myitem = "V_TacVest_camo";};
-case 15: {_myitem = "V_PlateCarrierIA1_dgtl";};
-case 16: {_myitem = "V_RebreatherB";};
-case 17: {_myitem = "V_PlateCarrier_Kerry";};
-case 18: {_myitem = "V_PlateCarrierH_CTRG";};
-case 19: {_myitem = "V_I_G_resistanceLeader_F";};
-case 20: {_myitem = "V_Chestrig_oli";};
-case 21: {_myitem = "V_EOD_blue_F";};
-case 22: {_myitem = "V_EOD_olive_F";};
-case 23: {_myitem = "V_LegStrapBag_F";};
-case 24: {_myitem = "V_Pocketed_black_F";};
-case 25: {_myitem = "V_Safety_yellow_F";};
-case 26: {_myitem = "V_Safety_orange_F";};
-default {};
-}; 
-if (_itemR < 27) then {
-_ammobox addItemCargo [_myitem,1];
-};
-_unifR = floor (random 31);
-switch(_unifR) do {
-case 0: {_myitem = "U_B_CombatUniform_mcam";};
-case 1: {_myitem = "U_B_HeliPilotCoveralls";};
-case 2: {_myitem = "U_B_Wetsuit";};
-case 3: {_myitem = "U_O_PilotCoveralls";};
-case 4: {_myitem = "U_C_Poloshirt_blue";};
-case 5: {_myitem = "U_Rangemaster";};
-case 6: {_myitem = "U_C_Poloshirt_tricolour";};
-case 7: {_myitem = "U_C_Poloshirt_redwhite";};
-case 8: {_myitem = "U_NikosBody";};
-case 9: {_myitem = "U_B_SpecopsUniform_sgg";};
-case 10: {_myitem = "U_O_CombatUniform_oucamo";};
-case 11: {_myitem = "U_O_SpecopsUniform_ocamo";};
-case 12: {_myitem = "U_O_OfficerUniform_ocamo";};
-case 13: {_myitem = "U_I_CombatUniform";};
-case 14: {_myitem = "U_I_pilotCoveralls";};
-case 15: {_myitem = "U_I_HeliPilotCoveralls";};
-case 16: {_myitem = "U_Competitor";};
-case 17: {_myitem = "U_IG_Guerilla1_1";};
-case 18: {_myitem = "U_IG_Guerilla2_1";};
-case 19: {_myitem = "U_IG_Guerilla3_1";};
-case 20: {_myitem = "U_IG_leader";};
-case 21: {_myitem = "U_C_Scientist";};
-case 22: {_myitem = "U_NikosAgedBody";};
-case 23: {_myitem = "U_C_Driver_1_black";};
-case 24: {_myitem = "U_C_Driver_2";};
-case 25: {_myitem = "U_C_Driver_3";};
-case 26: {_myitem = "U_C_Driver_4";};
-case 27: {_myitem = "U_B_GhillieSuit"};
-case 28: {_myitem = "U_I_GhillieSuit";};
-case 29: {_myitem = "U_O_GhillieSuit";};
-case 30: {_myitem = "U_C_IDAP_Man_casual_F";};
-};
-if (_unifR < 31) then {
-_ammobox addItemCargo [_myitem,1];
-};
-_helmR = floor (random 42);
-switch(_helmR) do {
-case 0: {_myitem = "ItemWatch";};
-case 1: {_myitem = "H_HelmetB";};
-case 2: {_myitem = "H_HelmetSpecB_paint1";};
-case 3: {_myitem = "H_HelmetIA";};
-case 4: {_myitem = "H_HelmetSpecB_paint1";};
-case 5: {_myitem = "H_HelmetB_camo";};
-case 6: {_myitem = "H_HelmetB_paint";};
-case 7: {_myitem = "H_Booniehat_khk";};
-case 8: {_myitem = "H_HelmetB_plain_mcamo";};
-case 9: {_myitem = "H_HelmetSpecB";};
-case 10: {_myitem = "H_HelmetIA_net";};
-case 11: {_myitem = "H_Helmet_Kerry";};
-case 12: {_myitem = "H_Cap_headphones";};
-case 14: {_myitem = "H_HelmetCrew_O";};
-case 15: {_myitem = "H_PilotHelmetFighter_B";};
-case 16: {_myitem = "H_PilotHelmetHeli_B";};
-case 17: {_myitem = "H_CrewHelmetHeli_O";};
-case 18: {_myitem = "H_HelmetLeaderO_ocamo";};
-case 19: {_myitem = "H_MilCap_mcamo";};
-case 20: {_myitem = "H_HelmetB_light_grass";};
-case 21: {_myitem = "H_HelmetSpecO_blk";};
-case 22: {_myitem = "H_Shemag_khk";};
-case 23: {_myitem = "H_Beret_blk";};
-case 24: {_myitem = "H_RacingHelmet_1_black_F";};
-case 25: {_myitem = "H_RacingHelmet_1_blue_F";};
-case 26: {_myitem = "H_RacingHelmet_1_yellow_F";};
-case 27: {_myitem = "H_RacingHelmet_1_orange_F";};
-case 28: {_myitem = "G_Balaclava_blk";};
-case 29: {_myitem = "G_Bandanna_Aviator";};
-case 30: {_myitem = "G_Aviator";};
-case 31: {_myitem = "G_Lowprofile";};
-case 32: {_myitem = "G_Tactical_Black";};
-case 33: {_myitem = "H_PASGT_basic_blue_F";};
-case 34: {_myitem = "H_EarProtectors_black_F";};
-case 35: {_myitem = "H_Construction_basic_yellow_F";};
-case 36: {_myitem = "H_Construction_basic_black_F";};
-case 37: {_myitem = "G_WirelessEarpiece_F";};
-case 38: {_myitem = "G_Respirator_white_F";};
-case 39: {_myitem = "G_EyeProtectors_F";};
-case 40: {_myitem = "G_Sport_Blackred";};
-case 41: {_myitem = "H_Hat_Safari_olive_F";};
-};
-if (_helmR < 42) then {
-_ammobox addItemCargo [_myitem,1];
-};
+/*vest */
+_vestSize = count userVestListForSpawn;
+_vestR = floor random(_vestSize);
+_myvest = configName (userVestListForSpawn select _vestR);
+_ammobox addItemCargo [_myvest,1];
+
+/* uniform */
+_unifSize = count userUniformsListForSpawn;
+_unifR = floor (random _unifSize);
+_my_unif = configName (userUniformsListForSpawn select _unifR);
+_ammobox addItemCargo [_my_unif,1];
+
+/*helmet */
+_helmSize = count userHelmetsListForSpawn;
+_helmR = floor (random _helmSize);
+_my_helm = configName (userHelmetsListForSpawn select _helmR);
+_ammobox addItemCargo [_my_helm,1];
+
 _itemR = floor (random (40));
 switch(_itemR) do {
 case 0: {_myitem = "ItemGPS";};
