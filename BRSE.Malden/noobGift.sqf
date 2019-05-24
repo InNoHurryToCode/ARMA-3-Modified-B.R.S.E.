@@ -1,29 +1,67 @@
 _myhuman = _this select 0;
-_randomGun = floor random(8);
-_guntogive = "";
-_myhuman addVest "V_HarnessO_brn";
-switch(_randomGun) do {
-case 0: {_guntogive = "srifle_EBR_DMS_pointer_snds_F"};
-case 1: {_guntogive = "arifle_MX_pointer_F";};
-case 2: {_guntogive = "arifle_Katiba_C_F";};
-case 3: {_guntogive = "hgun_Pistol_heavy_02_F";};
-case 4: {_guntogive = "arifle_Katiba_GL_F";};
-case 5: {_guntogive = "arifle_MX_SW_Black_F";};
-case 6: {_guntogive = "hgun_PDW2000_Holo_F";};
-case 7: {_guntogive = "SMG_01_Holo_pointer_snds_F";};
-default {};
+_weaponsSize = 0;
+_weaponR = 0;
+_myweapon = "";
+_helmSize = 0;
+_helmR = 0;
+_my_helm = "";
+_unifSize = 0;
+_unifR = 0;
+_my_unif = "";
+_vestSize = 0;
+_vestR = 0;
+_myvest = "";
+_backpackSize = 0;
+_backpackR = "";
+_mybackpack = 0;
+_addAidKit=0;
+
+/*helmet */
+_helmSize = count userHelmetsListForSpawn;
+_helmR = floor (random _helmSize);
+_my_helm = configName (userHelmetsListForSpawn select _helmR);
+if (isNil _my_helm) then {
+	_myhuman addHeadgear _my_helm;
 };
-_mymagazinearray = getArray (configFile >> 'CfgWeapons'>> _guntogive >> 'magazines');
+
+/*vest */
+_vestSize = count userVestListForSpawn;
+_vestR = floor random(_vestSize);
+_myvest = configName (userVestListForSpawn select _vestR);
+if (isNil _myvest && _myhuman != player) then {
+	_myhuman addVest _myvest;
+};
+
+/* backpack */
+_backpackSize = count userBackPacksListForSpawn;
+_backpackR = floor random(_backpackSize);
+_mybackpack = configName (userBackPacksListForSpawn select _backpackR);
+if (isNil _mybackpack) then {
+	_myhuman addBackpack _mybackpack;
+};
+
+/*Weapon block */
+_weaponsSize = count userRiflesListForSpawn;
+_weaponR = floor random(_weaponsSize);
+_myweapon = configName (userRiflesListForSpawn select _weaponR);
+
+_addAidKit = floor random(5);
+if(_addAidKit == 2 && _myhuman != player) then {
+	_myhuman addItem "FirstAidKit";
+};
+
+_mymagazinearray = getArray (configFile >> 'CfgWeapons'>> _myweapon >> 'magazines');
 if((count _mymagazinearray) > 0) then {
-_mymagazine = _mymagazinearray select 0;
-_myhuman addMagazine _mymagazine;
-_myhuman addMagazine _mymagazine;
-_myhuman addMagazine _mymagazine;
-_myhuman addMagazine _mymagazine;
-_myhuman addMagazine _mymagazine;
+	_mymagazine = _mymagazinearray select 0;
+	_myhuman addMagazine _mymagazine;
+	_myhuman addMagazine _mymagazine;
+	_myhuman addMagazine _mymagazine;
+	_myhuman addMagazine _mymagazine;
+	_myhuman addMagazine _mymagazine;
+	_myhuman addMagazine _mymagazine;
 };
-if (isNil _guntogive) then {
-_myhuman addWeapon _guntogive;
+if (isNil _myweapon) then {
+	_myhuman addWeapon _myweapon;
 };
 _grp = group _myhuman;
-_grp setBehaviour 'COMBAT';
+_grp setBehaviour 'SAFE';
