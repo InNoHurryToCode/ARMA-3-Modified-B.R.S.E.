@@ -42,7 +42,7 @@ case 4: {_skill = (floor (random (11)))/10};
 };
 _heroChooser = count MainHeroesArray;
 _heroPlayAg = floor random (_heroChooser);
-_heroPlayAg = MainHeroesArray select _heroPlayAg;
+_heroPlayAg = configName (MainHeroesArray select _heroPlayAg);
 _unit = _red createUnit [_heroPlayAg, position _myplane, [], 0, "CARGO"]; 
 [_myplane] join grpNull;
 [_unit] join grpNull;
