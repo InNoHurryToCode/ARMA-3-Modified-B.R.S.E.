@@ -1,2 +1,0 @@
-_layer1 = "spawn" cutText ["Spawning items. Please Wait","BLACK OUT", 2];
-_layer1 = "spawn" cutFadeOut 1;
