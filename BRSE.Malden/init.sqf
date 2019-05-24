@@ -1,4 +1,4 @@
-﻿dropCount = 0;
+dropCount = 0;
 randompos = floor random(15);
 MyPlayersCount = "Loading...                      ";
 PlaneXOffset = 0;

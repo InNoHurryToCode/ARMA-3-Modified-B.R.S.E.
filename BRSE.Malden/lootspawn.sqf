@@ -34,6 +34,7 @@ _randmagazine = floor (random [1,2,8]);
 if (_randmagazine > 0) then {
 _ammobox addMagazineCargo [_mymagazine, _randmagazine];
 };
+
 /* backpack */
 _backpackSize = count userBackPacksListForSpawn;
 _backpackR = floor random(_backpackSize);
